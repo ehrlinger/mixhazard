@@ -10,7 +10,7 @@ plot_drug_probabilities <- function(
   est     <- est_list$est
 
   if(is.null(tgrid)) {
-    tgrid <- seq(0, max(df_long$Time), length.out = max(df_long$Time) * 10)
+    tgrid <- seq(0, max(df_long$Time, na.rm = TRUE), length.out = max(df_long$Time, na.rm = TRUE) * 10)
   }
 
   # small time shift to avoid t = 0 issues in the model

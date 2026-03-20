@@ -8,7 +8,8 @@ fit_multimix_lite(
   df_long,
   nGH = 40,
   fixed_pars = list(),
-  default_init = default_init_example
+  default_init = default_init_example,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -19,19 +20,21 @@ fit_multimix_lite(
 \item{fixed_pars}{named list of parameters to fix values (i.e. no optimization on)}
 
 \item{default_init}{named list of initial parameters to try optimizing on}
+
+\item{verbose}{logical.}
 }
 \value{
-An object of class \code{multi_mix_model}, which is a list containing at least:
+An object of class \code{multimix_lite}, which is a list containing at least:
 \describe{
 \item{df_long}{The original \code{df_long} data frame used for fitting.}
 \item{est}{Named numeric vector of estimated parameters.}
-\item{u_hat}{Estimated random effects of size \verb{[N, 2]}}
+\item{u_hat}{Estimated random effects (named vector, one per subject).}
 \item{logLik}{Numeric. Log-likelihood of the fitted model.}
 }
-The object is intended to be used with S3 methods such as \code{print()}, \code{summary()}, and \code{plot()}.
+The object is intended to be used with S3 methods such as \code{print()} and \code{plot()}.
 }
 \description{
-This is called by \code{fit_model_with_retries_lite} using different initiating parameters.
+This is called by \code{multimix_lite()} using different initiating parameters.
 Contrary to the full model, this model only fits a single random effect and
 uses a scaling coefficient to approximate the second random effect
 }

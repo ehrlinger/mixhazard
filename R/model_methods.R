@@ -3,22 +3,24 @@
 ## Table of coefficients ----
 
 VAR_TO_ENGLISH_DICT <- c(
-  a1 = "a₁ (early)",
-  a2 = "a₂ (late)",
+  a1 = "a\u2081 (early)",
+  a2 = "a\u2082 (late)",
 
-  beta0_1 = "β₀₁ (early)",
-  beta0_2 = "β₀₂ (late)",
+  beta0_1 = "\u03b2\u2080\u2081 (early)",
+  beta0_2 = "\u03b2\u2080\u2082 (late)",
 
-  t_half_early = "t½ (early)",
-  t_half_late  = "t½ (late)",
+  t_half_early = "t\u00bd (early)",
+  t_half_late  = "t\u00bd (late)",
 
-  eta_early   = "η (early)",
-  eta_late    = "η (late)",
+  eta_early   = "\u03b7 (early)",
+  eta_late    = "\u03b7 (late)",
 
-  gamma_early = "γ (early)",
-  gamma_late  = "γ (late)",
+  gamma_early = "\u03b3 (early)",
+  gamma_late  = "\u03b3 (late)",
 
-  sigma = "σ"
+  sigma = "\u03c3",
+  sigma1 = "\u03c3\u2081 (early)",
+  sigma2 = "\u03c3\u2082 (late)"
 )
 
 #' Print method for multi-mix model objects
@@ -72,7 +74,7 @@ print.multimix_model_lite <- print.multimix_model
 #' This S3 method plots the estimated probabilities of drug administration
 #' over time for each drug class, using the multimix model object.
 #'
-#' @param x An object of class `multimix_model`, typically returned by `fit_model_with_retries()`.
+#' @param x An object of class `multimix_model`, typically returned by `multimix()`.
 #' @param ... Additional arguments passed to underlying plotting functions (currently ignored).
 #'
 #' @return `ggplot` object

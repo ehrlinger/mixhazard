@@ -1,6 +1,12 @@
 # Model ----
 
-# Check df_long is correct
+#' Validate input data frame for multimix model fitting
+#'
+#' Checks that the input data frame has the required structure and content.
+#'
+#' @param df_long A data frame in long format with columns: Subject_ID, Time, Binary_outcome.
+#' @return Invisibly returns TRUE if all checks pass.
+#' @export
 check_df_long <- function(df_long) {
   # Check df_long is a data frame
   if (!is.data.frame(df_long)) {
@@ -74,7 +80,8 @@ fit_multimix <- function(df_long,
     # Combine fixed and optimized parameters
     full_pars <- pars
     for (p in names(fixed_pars)) full_pars[[p]] <- fixed_pars[[p]]
-    last_pars <<- full_pars
+    # Store for error diagnostics (scoped to negLogLik's parent environment)
+    assign("last_pars", full_pars, envir = parent.env)
 
     beta0_1 <- full_pars["beta0_1"]
     beta0_2 <- full_pars["beta0_2"]
@@ -126,7 +133,9 @@ fit_multimix <- function(df_long,
       })
 
       # Integrate using weights
-      Li <- sum(weights %o% weights * exp(logL_k))  # outer product of weights
+      # Log-sum-exp trick for numerical stability in 2D quadrature
+      maxlog <- max(logL_k)
+      Li <- exp(maxlog) * sum(weights %o% weights * exp(logL_k - maxlog))
       total_loglik <- total_loglik + log(Li + eps)
     }
 
@@ -134,6 +143,7 @@ fit_multimix <- function(df_long,
   }
 
   # Optimization ----
+  parent.env <- environment()
   last_pars <- NULL
 
   if(verbose) {

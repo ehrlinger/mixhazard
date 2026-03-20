@@ -1,0 +1,112 @@
+---
+title: "Full vs Lite Model Comparison"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Full vs Lite Model Comparison}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+```{r setup}
+library(multimix)
+```
+
+## Two model variants
+
+The `multimix` package provides two model variants that differ in their random effects structure:
+
+### Full model (`multimix()`)
+
+- **Two independent random effects** $u_1, u_2 \sim N(0, \sigma_1^2), N(0, \sigma_2^2)$
+- $u_1$ scales the early phase, $u_2$ scales the late phase independently
+- Uses 2D Gauss-Hermite quadrature for numerical integration
+- **12 parameters** (before fixing): $\beta_{01}, \beta_{02}, a_1, a_2, \sigma_1, \sigma_2, t_{1/2}^{early}, t_{1/2}^{late}, \eta^{early}, \eta^{late}, \gamma^{early}, \gamma^{late}$
+
+### Lite model (`multimix_lite()`)
+
+- **Single shared random effect** $u \sim N(0, \sigma^2)$
+- The same $u$ scales both phases (via different coefficients $a_1, a_2$)
+- Uses 1D Gauss-Hermite quadrature (faster)
+- **11 parameters** (before fixing): same as full model but with a single $\sigma$ instead of $\sigma_1, \sigma_2$
+
+## When to use each
+
+| Scenario | Recommended model |
+|----------|------------------|
+| Large dataset (many subjects) | Full model — can estimate two variance components |
+| Small dataset (< 30 subjects) | Lite model — fewer parameters, more stable |
+| Exploratory analysis | Lite model — faster convergence |
+| Strong prior that phases are correlated | Lite model — shared random effect encodes this |
+| Phases are driven by different mechanisms | Full model — allows independent subject variation |
+| Publication/final analysis | Try both and compare via log-likelihood |
+
+## Comparing models
+
+```{r, eval = FALSE}
+# Fit both models
+full_model <- multimix(sample_data, verbose = FALSE)
+lite_model <- multimix_lite(sample_data, verbose = FALSE)
+
+# Compare log-likelihoods
+cat("Full model logLik:", full_model$logLik, "\n")
+cat("Lite model logLik:", lite_model$logLik, "\n")
+cat("Difference:", full_model$logLik - lite_model$logLik, "\n")
+```
+
+The full model will always have a log-likelihood at least as high as the lite model (since it is a more flexible model). However, if the improvement is small, the lite model may be preferred for parsimony.
+
+## Parameter interpretation differences
+
+### Full model
+
+```{r, eval = FALSE}
+print(full_model)
+```
+
+In the full model, $\sigma_1$ and $\sigma_2$ represent the standard deviation of between-subject variation in the early and late phases respectively. A large $\sigma_1$ with small $\sigma_2$ suggests subjects differ mainly in their early phase response.
+
+### Lite model
+
+```{r, eval = FALSE}
+print(lite_model)
+```
+
+In the lite model, the single $\sigma$ captures overall between-subject variation. The coefficients $a_1$ and $a_2$ determine how much of this variation is expressed in each phase.
+
+## Visual comparison
+
+```{r, eval = FALSE}
+library(ggplot2)
+
+p_full <- plot(full_model) + ggtitle("Full Model (two random effects)")
+p_lite <- plot(lite_model) + ggtitle("Lite Model (single random effect)")
+
+print(p_full)
+print(p_lite)
+```
+
+Look for:
+
+- **Subject-level curves**: More spread in the full model suggests the two random effects capture additional variability
+- **Population average**: Should be similar between models if the data is well-behaved
+- **Fit to observed data**: Compare how closely the points (empirical proportions) track the blue line
+
+## Computational considerations
+
+| Aspect | Full model | Lite model |
+|--------|-----------|------------|
+| Quadrature | 2D ($n_{GH}^2$ evaluations) | 1D ($n_{GH}$ evaluations) |
+| Per-subject cost | $O(n_{GH}^2 \cdot T_i)$ | $O(n_{GH} \cdot T_i)$ |
+| Typical convergence | Slower, more retries | Faster, fewer retries |
+| Default nGH = 40 | 1,600 evaluations/subject | 40 evaluations/subject |
+
+For large datasets, consider starting with the lite model to get reasonable initial parameter estimates, then using those to inform the bounds for the full model.

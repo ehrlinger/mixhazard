@@ -11,7 +11,7 @@ multimix_lite(
   upper_bounds = upper_bounds_example_lite,
   max_tries = 20,
   return_first_sucess = FALSE,
-  verbose = TRUE,
+  verbose = FALSE,
   seed = 1234
 )
 }
@@ -33,7 +33,7 @@ multimix_lite(
 \item{seed}{random number generator seed}
 }
 \value{
-An object of class \code{multi_mix_model}, which is a list containing at least:
+An object of class \code{multimix_lite}, which is a list containing at least:
 \describe{
 \item{df_long}{The original \code{df_long} data frame used for fitting.}
 \item{est}{Named numeric vector of estimated parameters.}

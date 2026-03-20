@@ -1,2 +1,6 @@
 ^multimix\.Rproj$
 ^\.Rproj\.user$
+^\.github$
+^LICENSE\.md$
+^codecov\.yml$
+^\.claude$

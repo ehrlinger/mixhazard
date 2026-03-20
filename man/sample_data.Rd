@@ -3,20 +3,25 @@
 \docType{data}
 \name{sample_data}
 \alias{sample_data}
-\title{Example long-format binary dataset used for model fitting}
+\title{Example long-format binary dataset for multimix modeling}
 \format{
-A data frame with X rows and Y variables:
+A data frame with the following variables:
 \describe{
-\item{Subject_ID}{Integer patient identifier}
-\item{Time}{Numeric time of measurement (months post-op)}
-\item{Binary_outcome}{0/1 binary if patient is on drug}
+\item{Subject_ID}{Integer patient identifier.}
+\item{Time}{Numeric time of measurement (months post-op).}
+\item{Binary_outcome}{Binary indicator (0/1) of whether the patient is on the drug.}
 }
 }
 \usage{
 sample_data
 }
 \description{
-This dataset contains longitudinal drug administration data for
-a post-operative inflammatory medication, used as an example for multimix modeling.
+Longitudinal drug administration data for a post-operative inflammatory
+medication, used as an example for biphasic temporal decomposition modeling.
+}
+\examples{
+data(sample_data)
+head(sample_data)
+table(sample_data$Binary_outcome)
 }
 \keyword{datasets}

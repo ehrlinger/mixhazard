@@ -1,4 +1,7 @@
 # Example initial parameters ----
+
+#' Example initial parameters for the full multimix model
+#' @export
 default_init_example <- c(
   beta0_1 = 10,
   beta0_2 = 0,
@@ -14,6 +17,8 @@ default_init_example <- c(
   gamma_late = 0
 )
 
+#' Example lower bounds for the full multimix model
+#' @export
 lower_bounds_example <- c(
   beta0_1 = -10,
   beta0_2 = -10,
@@ -29,6 +34,8 @@ lower_bounds_example <- c(
   gamma_late = -5
 )
 
+#' Example upper bounds for the full multimix model
+#' @export
 upper_bounds_example <- c(
   beta0_1 = 5,
   beta0_2 = 5,
@@ -45,6 +52,8 @@ upper_bounds_example <- c(
 )
 
 
+#' Example initial parameters for the lite multimix model
+#' @export
 default_init_example_lite <- c(
   beta0_1 = 10,
   beta0_2 = 0,
@@ -59,6 +68,8 @@ default_init_example_lite <- c(
   gamma_late = 0
 )
 
+#' Example lower bounds for the lite multimix model
+#' @export
 lower_bounds_example_lite <- c(
   beta0_1 = -10,
   beta0_2 = -10,
@@ -73,6 +84,8 @@ lower_bounds_example_lite <- c(
   gamma_late = -2
 )
 
+#' Example upper bounds for the lite multimix model
+#' @export
 upper_bounds_example_lite <- c(
   beta0_1 = 5,
   beta0_2 = 5,
@@ -87,6 +100,16 @@ upper_bounds_example_lite <- c(
   gamma_late = 2
 )
 
+#' Generate random initial parameters within bounds
+#'
+#' Draws random initialization from a uniform distribution within the specified bounds,
+#' rejecting draws where both eta and gamma are negative (undefined model case)
+#' or where |eta| < 0.1 (near-zero exponent causes instability).
+#'
+#' @param lower_bounds Named numeric vector of lower bounds.
+#' @param upper_bounds Named numeric vector of upper bounds.
+#' @return Named numeric vector of initial parameter values.
+#' @export
 generate_random_init_from_bounds <- function(
     lower_bounds,
     upper_bounds
@@ -108,14 +131,12 @@ generate_random_init_from_bounds <- function(
     # reject invalid draws
     if (
       (eta_early < 0 && gamma_early < 0) ||
-      (eta_late  < 0 && gamma_late  < 0 ||
-       abs(eta_early) < 0.1 || abs(eta_late) < 0.1)
+      (eta_late  < 0 && gamma_late  < 0) ||
+      abs(eta_early) < 0.1 || abs(eta_late) < 0.1
     ) {
       next
     }
 
     return(init)
   }
-
-  init
 }

@@ -1,7 +1,7 @@
 # Model ----
 #' fit_multimix_lite: Fit a lighter version of the mixed effects model using initiating parameters
 #'
-#' This is called by `fit_model_with_retries_lite` using different initiating parameters.
+#' This is called by `multimix_lite()` using different initiating parameters.
 #' Contrary to the full model, this model only fits a single random effect and
 #' uses a scaling coefficient to approximate the second random effect
 #'
@@ -9,18 +9,20 @@
 #' @param nGH number of nodes for optimizer
 #' @param fixed_pars named list of parameters to fix values (i.e. no optimization on)
 #' @param default_init named list of initial parameters to try optimizing on
-#' @return An object of class `multi_mix_model`, which is a list containing at least:
+#' @param verbose logical.
+#' @return An object of class `multimix_lite`, which is a list containing at least:
 #' \describe{
 #'   \item{df_long}{The original `df_long` data frame used for fitting.}
 #'   \item{est}{Named numeric vector of estimated parameters.}
-#'   \item{u_hat}{Estimated random effects of size `[N, 2]`}
+#'   \item{u_hat}{Estimated random effects (named vector, one per subject).}
 #'   \item{logLik}{Numeric. Log-likelihood of the fitted model.}
 #' }
-#' The object is intended to be used with S3 methods such as `print()`, `summary()`, and `plot()`.
+#' The object is intended to be used with S3 methods such as `print()` and `plot()`.
 fit_multimix_lite <- function(df_long,
                            nGH = 40,
                            fixed_pars = list(),
-                           default_init = default_init_example) {
+                           default_init = default_init_example,
+                           verbose = FALSE) {
 
   check_df_long(df_long)
 
@@ -43,7 +45,7 @@ fit_multimix_lite <- function(df_long,
       full_pars[[p]] <- fixed_pars[[p]]
     }
 
-    last_pars <<- full_pars
+    assign("last_pars", full_pars, envir = parent.env)
 
     beta0_1 <- full_pars["beta0_1"]
     beta0_2 <- full_pars["beta0_2"]
@@ -60,7 +62,7 @@ fit_multimix_lite <- function(df_long,
     gamma_early  <- full_pars["gamma_early"]
     gamma_late   <- full_pars["gamma_late"]
 
-    if(eta_early < 0 & gamma_early < 0 | eta_late < 0 & gamma_late < 0) {
+    if ((eta_early < 0 && gamma_early < 0) || (eta_late < 0 && gamma_late < 0)) {
       stop("Generic function undefined for eta and gamma both < 0")
     }
 
@@ -107,6 +109,7 @@ fit_multimix_lite <- function(df_long,
   # Optimization ----
   # BFGS optimizer often fails, so making a variable to capture the last set of params
   # right before it fails
+  parent.env <- environment()
   last_pars <- NULL
 
   if(verbose) {
@@ -212,7 +215,7 @@ fit_multimix_lite <- function(df_long,
 #' @param verbose logical. If `TRUE` then error messages will be displayed for each failed attempt
 #' @param seed random number generator seed
 #'
-#' @return An object of class `multi_mix_model`, which is a list containing at least:
+#' @return An object of class `multimix_lite`, which is a list containing at least:
 #' \describe{
 #'   \item{df_long}{The original `df_long` data frame used for fitting.}
 #'   \item{est}{Named numeric vector of estimated parameters.}
@@ -229,7 +232,7 @@ multimix_lite <- function(
     upper_bounds = upper_bounds_example_lite,
     max_tries = 20,
     return_first_sucess = FALSE,
-    verbose = TRUE,
+    verbose = FALSE,
     seed = 1234
 ) {
 
@@ -250,7 +253,8 @@ multimix_lite <- function(
       fit_multimix_lite(
         df_long,
         fixed_pars = fixed_pars,
-        default_init = init
+        default_init = init,
+        verbose = verbose
       ),
       error = function(e) {
         if (verbose) {

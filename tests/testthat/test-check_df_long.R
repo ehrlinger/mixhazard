@@ -12,7 +12,9 @@ test_that("check_df_long rejects non-data.frame", {
 })
 
 test_that("check_df_long rejects empty data frame", {
-  df <- data.frame(Subject_ID = integer(), Time = numeric(), Binary_outcome = integer())
+  df <- data.frame(
+    Subject_ID = integer(), Time = numeric(), Binary_outcome = integer()
+  )
   expect_error(check_df_long(df), "empty")
 })
 
@@ -22,6 +24,8 @@ test_that("check_df_long rejects missing columns", {
 })
 
 test_that("check_df_long rejects constant outcome", {
-  df <- data.frame(Subject_ID = c(1, 2), Time = c(1, 2), Binary_outcome = c(1, 1))
+  df <- data.frame(
+    Subject_ID = c(1, 2), Time = c(1, 2), Binary_outcome = c(1, 1)
+  )
   expect_error(check_df_long(df), "constant")
 })

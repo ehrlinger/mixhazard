@@ -100,7 +100,9 @@ df_phases <- data.frame(
     get_early_phase(times, thalf = 3, eta = 1, gamma = 0),
     get_late_phase(times, thalf = 3, eta = 1, gamma = 0)
   ),
-  Phase = rep(c("Early (density g(t))", "Late (hazard h(t))"), each = length(times))
+  Phase = rep(
+    c("Early (density g(t))", "Late (hazard h(t))"), each = length(times)
+  )
 )
 
 ggplot(df_phases, aes(x = Time, y = Value, color = Phase)) +

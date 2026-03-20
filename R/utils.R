@@ -102,17 +102,18 @@ upper_bounds_example_lite <- c(
 
 #' Generate random initial parameters within bounds
 #'
-#' Draws random initialization from a uniform distribution within the specified bounds,
-#' rejecting draws where both eta and gamma are negative (undefined model case)
-#' or where |eta| < 0.1 (near-zero exponent causes instability).
+#' Draws random initialization from a uniform distribution within the
+#' specified bounds, rejecting draws where both eta and gamma are negative
+#' (undefined model case) or where |eta| < 0.1 (near-zero exponent causes
+#' instability).
 #'
 #' @param lower_bounds Named numeric vector of lower bounds.
 #' @param upper_bounds Named numeric vector of upper bounds.
 #' @return Named numeric vector of initial parameter values.
 #' @export
 generate_random_init_from_bounds <- function(
-    lower_bounds,
-    upper_bounds
+  lower_bounds,
+  upper_bounds
 ) {
 
   repeat {
@@ -130,9 +131,9 @@ generate_random_init_from_bounds <- function(
 
     # reject invalid draws
     if (
-      (eta_early < 0 && gamma_early < 0) ||
-      (eta_late  < 0 && gamma_late  < 0) ||
-      abs(eta_early) < 0.1 || abs(eta_late) < 0.1
+        (eta_early < 0 && gamma_early < 0) ||
+        (eta_late  < 0 && gamma_late  < 0) ||
+        abs(eta_early) < 0.1 || abs(eta_late) < 0.1
     ) {
       next
     }

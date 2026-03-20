@@ -2,7 +2,7 @@
 
 ## Table of coefficients ----
 
-VAR_TO_ENGLISH_DICT <- c(
+var_to_english_dict <- c(
   a1 = "a\u2081 (early)",
   a2 = "a\u2082 (late)",
 
@@ -30,7 +30,8 @@ VAR_TO_ENGLISH_DICT <- c(
 #'
 #' @param x An object of class `multimix_model` or `multimix_model_lite`,
 #'          typically returned by `multimix()` or its lite variant.
-#' @param ... Additional arguments (currently ignored) to allow method dispatch compatibility.
+#' @param ... Additional arguments (currently ignored) to allow method
+#'   dispatch compatibility.
 #'
 #' @return Invisibly returns the original object `x`.
 #' @export
@@ -45,8 +46,8 @@ print.multimix_model <- function(x, ...) {
   )
 
   est_long$parameter <- ifelse(
-    est_long$parameter %in% names(VAR_TO_ENGLISH_DICT),
-    VAR_TO_ENGLISH_DICT[est_long$parameter],
+    est_long$parameter %in% names(var_to_english_dict),
+    var_to_english_dict[est_long$parameter],
     est_long$parameter
   )
 
@@ -74,8 +75,10 @@ print.multimix_model_lite <- print.multimix_model
 #' This S3 method plots the estimated probabilities of drug administration
 #' over time for each drug class, using the multimix model object.
 #'
-#' @param x An object of class `multimix_model`, typically returned by `multimix()`.
-#' @param ... Additional arguments passed to underlying plotting functions (currently ignored).
+#' @param x An object of class `multimix_model`, typically returned
+#'   by `multimix()`.
+#' @param ... Additional arguments passed to underlying plotting functions
+#'   (currently ignored).
 #'
 #' @return `ggplot` object
 #' @export
@@ -89,8 +92,10 @@ plot.multimix_model <- function(x, ...) {
 #' This S3 method plots the estimated probabilities of drug administration
 #' over time for each drug class, using a lighter version of the multimix model
 #'
-#' @param x An object of class `multimix_model`, typically returned by `multimix()`.
-#' @param ... Additional arguments passed to underlying plotting functions (currently ignored).
+#' @param x An object of class `multimix_model`, typically returned
+#'   by `multimix()`.
+#' @param ... Additional arguments passed to underlying plotting functions
+#'   (currently ignored).
 #'
 #' @return `ggplot` object
 #' @export
@@ -98,4 +103,3 @@ plot.multimix_model <- function(x, ...) {
 plot.multimix_model_lite <- function(x, ...) {
   plot_drug_probabilities_lite(x, ...)
 }
-

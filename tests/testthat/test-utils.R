@@ -21,8 +21,12 @@ test_that("default_init_example_lite has correct parameter names", {
 test_that("bounds have same names as defaults", {
   expect_equal(names(lower_bounds_example), names(default_init_example))
   expect_equal(names(upper_bounds_example), names(default_init_example))
-  expect_equal(names(lower_bounds_example_lite), names(default_init_example_lite))
-  expect_equal(names(upper_bounds_example_lite), names(default_init_example_lite))
+  expect_equal(
+    names(lower_bounds_example_lite), names(default_init_example_lite)
+  )
+  expect_equal(
+    names(upper_bounds_example_lite), names(default_init_example_lite)
+  )
 })
 
 test_that("lower bounds are less than upper bounds", {
@@ -32,7 +36,9 @@ test_that("lower bounds are less than upper bounds", {
 
 test_that("generate_random_init_from_bounds produces valid init", {
   set.seed(42)
-  init <- generate_random_init_from_bounds(lower_bounds_example, upper_bounds_example)
+  init <- generate_random_init_from_bounds(
+    lower_bounds_example, upper_bounds_example
+  )
 
   expect_named(init, names(lower_bounds_example))
   expect_true(all(init >= lower_bounds_example))
@@ -49,7 +55,9 @@ test_that("generate_random_init_from_bounds produces valid init", {
 
 test_that("generate_random_init_from_bounds works for lite bounds", {
   set.seed(42)
-  init <- generate_random_init_from_bounds(lower_bounds_example_lite, upper_bounds_example_lite)
+  init <- generate_random_init_from_bounds(
+    lower_bounds_example_lite, upper_bounds_example_lite
+  )
 
   expect_named(init, names(lower_bounds_example_lite))
   expect_true(all(init >= lower_bounds_example_lite))

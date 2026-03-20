@@ -1,7 +1,9 @@
 test_that("sample_data has required columns", {
   data(sample_data, package = "multimix")
   expect_true(is.data.frame(sample_data))
-  expect_true(all(c("Subject_ID", "Time", "Binary_outcome") %in% names(sample_data)))
+  expect_true(
+    all(c("Subject_ID", "Time", "Binary_outcome") %in% names(sample_data))
+  )
 })
 
 test_that("sample_data has valid content", {

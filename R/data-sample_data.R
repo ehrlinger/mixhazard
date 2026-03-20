@@ -7,7 +7,8 @@
 #' \describe{
 #'   \item{Subject_ID}{Integer patient identifier.}
 #'   \item{Time}{Numeric time of measurement (months post-op).}
-#'   \item{Binary_outcome}{Binary indicator (0/1) of whether the patient is on the drug.}
+#'   \item{Binary_outcome}{Binary indicator (0/1) of whether the patient
+#'     is on the drug.}
 #' }
 #' @examples
 #' data(sample_data)

@@ -1,4 +1,4 @@
-test_that("VAR_TO_ENGLISH_DICT maps all expected parameters", {
+test_that("var_to_english_dict maps all expected parameters", {
   expected_keys <- c(
     "a1", "a2", "beta0_1", "beta0_2",
     "t_half_early", "t_half_late",
@@ -6,7 +6,7 @@ test_that("VAR_TO_ENGLISH_DICT maps all expected parameters", {
     "gamma_early", "gamma_late",
     "sigma", "sigma1", "sigma2"
   )
-  expect_true(all(expected_keys %in% names(VAR_TO_ENGLISH_DICT)))
+  expect_true(all(expected_keys %in% names(var_to_english_dict)))
 })
 
 test_that("print.multimix_model prints and returns invisibly", {

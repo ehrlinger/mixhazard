@@ -131,9 +131,9 @@ generate_random_init_from_bounds <- function(
 
     # reject invalid draws
     if (
-        (eta_early < 0 && gamma_early < 0) ||
-        (eta_late  < 0 && gamma_late  < 0) ||
-        abs(eta_early) < 0.1 || abs(eta_late) < 0.1
+      (eta_early < 0 && gamma_early < 0) ||
+      (eta_late  < 0 && gamma_late  < 0) ||
+      abs(eta_early) < 0.1 || abs(eta_late) < 0.1
     ) {
       next
     }

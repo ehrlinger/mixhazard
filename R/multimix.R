@@ -81,7 +81,7 @@ fit_multimix <- function(df_long,
 
   # Compute negative log likelihood for optimization
   neg_log_lik <- function(
-      pars, data, nodes, weights, fixed_pars = list(), eps = 1e-300
+    pars, data, nodes, weights, fixed_pars = list(), eps = 1e-300
   ) {
 
     # Combine fixed and optimized parameters
@@ -107,8 +107,8 @@ fit_multimix <- function(df_long,
     gamma_late   <- full_pars["gamma_late"]
 
     if (
-        (eta_early < 0 && gamma_early < 0) ||
-        (eta_late  < 0 && gamma_late  < 0)
+      (eta_early < 0 && gamma_early < 0) ||
+      (eta_late  < 0 && gamma_late  < 0)
     ) {
       stop("Generic function undefined for eta and gamma both < 0")
     }

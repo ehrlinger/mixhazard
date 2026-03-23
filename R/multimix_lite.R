@@ -171,8 +171,12 @@ fit_multimix_lite <- function(df_long,
 
   # Empirical Bayes to find random effects ----
   conditional_odds_fun <- function(t, u_i) {
-    phase_early <- get_early_phase(t, est["t_half_early"], est["eta_early"], est["gamma_early"])
-    phase_late <- get_late_phase(t, est["t_half_late"], est["eta_late"], est["gamma_late"])
+    phase_early <- get_early_phase(
+      t, est["t_half_early"], est["eta_early"], est["gamma_early"]
+    )
+    phase_late <- get_late_phase(
+      t, est["t_half_late"], est["eta_late"], est["gamma_late"]
+    )
     exp(est["beta0_1"] + est["a1"] * u_i) * phase_early +
       exp(est["beta0_2"] + est["a2"] * u_i) * phase_late
   }

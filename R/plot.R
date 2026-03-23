@@ -1,7 +1,9 @@
-plot_drug_probabilities <- function(est_list,
-                                    tgrid = NULL,
-                                    n_time_quartiles = 10,
-                                    title = "Temporal Decomposition Logistic Mixed Effects model") {
+plot_drug_probabilities <- function(
+  est_list,
+  tgrid = NULL,
+  n_time_quartiles = 10,
+  title = "Temporal Decomposition Logistic Mixed Effects model"
+) {
   df_long <- est_list$df_long
   u_hat   <- est_list$u_hat
   est     <- est_list$est
@@ -109,10 +111,12 @@ plot_drug_probabilities <- function(est_list,
     theme_minimal(base_size = 14)
 }
 
-plot_drug_probabilities_lite <- function(est_list,
-                                         tgrid = NULL,
-                                         n_time_quartiles = 10,
-                                         title = "Temporal Decomposition Logistic Mixed Effects model") {
+plot_drug_probabilities_lite <- function(
+  est_list,
+  tgrid = NULL,
+  n_time_quartiles = 10,
+  title = "Temporal Decomposition Logistic Mixed Effects model"
+) {
   df_long <- est_list$df_long
   u_hat   <- est_list$u_hat
   est     <- est_list$est

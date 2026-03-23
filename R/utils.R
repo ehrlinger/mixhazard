@@ -113,8 +113,10 @@ upper_bounds_example_lite <- c(
 #' @export
 generate_random_init_from_bounds <- function(lower_bounds, upper_bounds) {
   repeat {
-    init <- mapply(function(lo, hi)
-      runif(1, lo, hi), lower_bounds, upper_bounds)
+    init <- mapply(
+      function(lo, hi) runif(1, lo, hi),
+      lower_bounds, upper_bounds
+    )
 
     # Make sure not both are negative (undefined)
     eta_early   <- init["eta_early"]

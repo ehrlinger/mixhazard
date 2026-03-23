@@ -1,6 +1,7 @@
 Package: multimix
 Title: Biphasic Temporal Decomposition Logistic Mixed Effects Model
-Version: 0.1.0
+Version: 1.0.0.9000
+Date: 2026-03-23
 Authors@R:
     person("Michelle", "Fang", , "fangm@ccf.org", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-1548-010X"))
@@ -15,7 +16,7 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Depends:
-    R (>= 3.5.0)
+    R (>= 4.1.0)
 LazyData: true
 Imports:
     dplyr,

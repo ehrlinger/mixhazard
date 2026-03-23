@@ -2,9 +2,11 @@
 # multimix <img src="man/figures/logo.png" align="right" height="139" alt="" />
 
 <!-- badges: start -->
+[![Version](https://img.shields.io/badge/version-1.0.0.9000-blue.svg)](https://github.com/michelleUMD/multimix)
 [![R-CMD-check](https://github.com/michelleUMD/multimix/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/michelleUMD/multimix/actions/workflows/R-CMD-check.yaml)
 [![test-coverage](https://github.com/michelleUMD/multimix/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/michelleUMD/multimix/actions/workflows/test-coverage.yaml)
 [![Codecov test coverage](https://codecov.io/gh/michelleUMD/multimix/graph/badge.svg)](https://app.codecov.io/gh/michelleUMD/multimix)
+[![lint](https://github.com/michelleUMD/multimix/actions/workflows/lint.yaml/badge.svg)](https://github.com/michelleUMD/multimix/actions/workflows/lint.yaml)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <!-- badges: end -->
@@ -106,6 +108,6 @@ If you use this package in your research, please cite:
 
 ```
 Fang, M. (2026). multimix: Biphasic Temporal Decomposition Logistic Mixed
-  Effects Model. R package version 0.1.0.
+  Effects Model. R package version 1.0.0.9000.
   https://github.com/michelleUMD/multimix
 ```

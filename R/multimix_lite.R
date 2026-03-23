@@ -244,7 +244,7 @@ fit_multimix_lite <- function(df_long,
 #' \describe{
 #'   \item{df_long}{The original `df_long` data frame used for fitting.}
 #'   \item{est}{Named numeric vector of estimated parameters.}
-#'   \item{u_hat}{Named numeric vector of empirical Bayes random effect estimates,
+#'   \item{u_hat}{Named numeric vector of empirical Bayes random effects,
 #'     one value per subject (length N).}
 #'   \item{logLik}{Numeric. Log-likelihood of the fitted model.}
 #' }

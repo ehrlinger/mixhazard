@@ -111,17 +111,10 @@ upper_bounds_example_lite <- c(
 #' @param upper_bounds Named numeric vector of upper bounds.
 #' @return Named numeric vector of initial parameter values.
 #' @export
-generate_random_init_from_bounds <- function(
-  lower_bounds,
-  upper_bounds
-) {
-
+generate_random_init_from_bounds <- function(lower_bounds, upper_bounds) {
   repeat {
-    init <- mapply(
-      function(lo, hi) runif(1, lo, hi),
-      lower_bounds,
-      upper_bounds
-    )
+    init <- mapply(function(lo, hi)
+      runif(1, lo, hi), lower_bounds, upper_bounds)
 
     # Make sure not both are negative (undefined)
     eta_early   <- init["eta_early"]
@@ -130,11 +123,10 @@ generate_random_init_from_bounds <- function(
     gamma_late  <- init["gamma_late"]
 
     # reject invalid draws
-    if (
-      (eta_early < 0 && gamma_early < 0) ||
-      (eta_late  < 0 && gamma_late  < 0) ||
-      abs(eta_early) < 0.1 || abs(eta_late) < 0.1
-    ) {
+    early_invalid <- eta_early < 0 && gamma_early < 0
+    late_invalid  <- eta_late  < 0 && gamma_late  < 0
+    eta_near_zero <- abs(eta_early) < 0.1 || abs(eta_late) < 0.1
+    if (early_invalid || late_invalid || eta_near_zero) {
       next
     }
 

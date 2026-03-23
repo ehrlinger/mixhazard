@@ -15,15 +15,17 @@ decompos(time, thalf, nu, m, complet)
 
 \item{m}{Exponent of the entire function (gamma in model notation).}
 
-\item{complet}{Integer flag for complete (1) vs incomplete (0) distribution (currently unused).}
+\item{complet}{Integer flag for complete (1) vs incomplete (0) distribution
+(currently unused).}
 }
 \value{
-A list with components: capgt (cumulative), gt (density/early phase), ht (hazard/late phase).
+A list with components: capgt (cumulative), gt (density/early
+phase), ht (hazard/late phase).
 }
 \description{
-Computes cumulative distribution (capgt), density (gt), and hazard (ht) for
-the generalized temporal decomposition model parameterized by half-life,
-exponent nu (eta), and shape m (gamma).
+Computes cumulative distribution (capgt), density (gt), and hazard (ht)
+for the generalized temporal decomposition model parameterized by
+half-life, exponent nu (eta), and shape m (gamma).
 }
 \details{
 Handles 6 valid parameter combinations based on signs of m and nu.

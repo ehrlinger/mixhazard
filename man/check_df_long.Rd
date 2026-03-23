@@ -7,7 +7,8 @@
 check_df_long(df_long)
 }
 \arguments{
-\item{df_long}{A data frame in long format with columns: Subject_ID, Time, Binary_outcome.}
+\item{df_long}{A data frame in long format with columns: Subject_ID, Time,
+Binary_outcome.}
 }
 \value{
 Invisibly returns TRUE if all checks pass.

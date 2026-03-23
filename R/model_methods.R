@@ -54,10 +54,7 @@ print.multimix_model <- function(x, ...) {
   rownames(est_long) <- est_long$parameter
   est_long$parameter <- NULL
 
-  print(
-    round(est_long, 2),
-    ...
-  )
+  print(round(est_long, 2), ...)
 
   invisible(x)
 }

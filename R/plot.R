@@ -1,20 +1,15 @@
-plot_drug_probabilities <- function(
-  est_list,
-  tgrid = NULL,
-  n_time_quartiles = 10,
-  title = "Temporal Decomposition Logistic Mixed Effects model"
-) {
-
+plot_drug_probabilities <- function(est_list,
+                                    tgrid = NULL,
+                                    n_time_quartiles = 10,
+                                    title = "Temporal Decomposition Logistic Mixed Effects model") {
   df_long <- est_list$df_long
   u_hat   <- est_list$u_hat
   est     <- est_list$est
 
   if (is.null(tgrid)) {
-    tgrid <- seq(
-      0,
-      max(df_long$Time, na.rm = TRUE),
-      length.out = max(df_long$Time, na.rm = TRUE) * 10
-    )
+    tgrid <- seq(0,
+                 max(df_long$Time, na.rm = TRUE),
+                 length.out = max(df_long$Time, na.rm = TRUE) * 10)
   }
 
   # small time shift to avoid t = 0 issues in the model
@@ -55,11 +50,9 @@ plot_drug_probabilities <- function(
     odds <- conditional_odds(t_model, u_i[1], u_i[2])
     pi_i <- odds / (1 + odds)
 
-    data.frame(
-      Subject_ID = i,
-      Time       = t_plot,
-      Fitted     = pi_i
-    )
+    data.frame(Subject_ID = i,
+               Time       = t_plot,
+               Fitted     = pi_i)
   })
 
   sub_df <- bind_rows(sub_list)
@@ -109,34 +102,26 @@ plot_drug_probabilities <- function(
       color = "blue",
       linewidth = 1
     ) +
-    geom_point(
-      data = quartile_points,
-      aes(x = Time, y = Prop_TRUE),
-    ) +
+    geom_point(data = quartile_points, aes(x = Time, y = Prop_TRUE), ) +
     scale_y_continuous(name = "Probability", limits = c(0, 1)) +
     scale_x_continuous(name = "Time (months)", limits = c(0, 60)) +
     labs(title = title) +
     theme_minimal(base_size = 14)
 }
 
-plot_drug_probabilities_lite <- function(
-  est_list,
-  tgrid = NULL,
-  n_time_quartiles = 10,
-  title = "Temporal Decomposition Logistic Mixed Effects model"
-) {
-
+plot_drug_probabilities_lite <- function(est_list,
+                                         tgrid = NULL,
+                                         n_time_quartiles = 10,
+                                         title = "Temporal Decomposition Logistic Mixed Effects model") {
   df_long <- est_list$df_long
   u_hat   <- est_list$u_hat
   est     <- est_list$est
 
   # Default time grid from data
   if (is.null(tgrid)) {
-    tgrid <- seq(
-      0,
-      max(df_long$Time, na.rm = TRUE),
-      length.out = max(df_long$Time, na.rm = TRUE) * 10
-    )
+    tgrid <- seq(0,
+                 max(df_long$Time, na.rm = TRUE),
+                 length.out = max(df_long$Time, na.rm = TRUE) * 10)
   }
 
   # small time shift to avoid t = 0 issues in the model
@@ -177,11 +162,9 @@ plot_drug_probabilities_lite <- function(
     odds <- conditional_odds(t_model, u_i)
     pi_i <- odds / (1 + odds)
 
-    data.frame(
-      Subject_ID = i,
-      Time       = t_plot,
-      Fitted     = pi_i
-    )
+    data.frame(Subject_ID = i,
+               Time       = t_plot,
+               Fitted     = pi_i)
   })
 
   sub_df <- bind_rows(sub_list)

@@ -28,7 +28,6 @@ fit_multimix_lite <- function(df_long,
                               fixed_pars = list(),
                               default_init = default_init_example,
                               verbose = FALSE) {
-
   check_df_long(df_long)
 
   # Gauss-Hermite quadrature ----
@@ -42,10 +41,12 @@ fit_multimix_lite <- function(df_long,
   init_pars  <- default_init[train_pars]
 
   # Compute negative log likelihood for optimization
-  neg_log_lik <- function(
-    pars, data, nodes, weights, fixed_pars = list(), eps = 1e-300
-  ) {
-
+  neg_log_lik <- function(pars,
+                          data,
+                          nodes,
+                          weights,
+                          fixed_pars = list(),
+                          eps = 1e-300) {
     # Combine fixed and optimized parameters
     full_pars <- pars
     for (p in names(fixed_pars)) {
@@ -69,10 +70,9 @@ fit_multimix_lite <- function(df_long,
     gamma_early  <- full_pars["gamma_early"]
     gamma_late   <- full_pars["gamma_late"]
 
-    if (
-      (eta_early < 0 && gamma_early < 0) ||
-      (eta_late < 0 && gamma_late < 0)
-    ) {
+    early_invalid <- eta_early < 0 && gamma_early < 0
+    late_invalid  <- eta_late < 0 && gamma_late < 0
+    if (early_invalid || late_invalid) {
       stop("Generic function undefined for eta and gamma both < 0")
     }
 
@@ -112,7 +112,7 @@ fit_multimix_lite <- function(df_long,
       total_loglik <- total_loglik + log(li + eps)
     }
 
-    -total_loglik
+    - total_loglik
   }
 
 
@@ -127,7 +127,8 @@ fit_multimix_lite <- function(df_long,
   }
   opt2 <- tryCatch(
     optim(
-      init_pars, neg_log_lik,
+      init_pars,
+      neg_log_lik,
       data = df_long,
       nodes = nodes,
       weights = weights,
@@ -170,12 +171,8 @@ fit_multimix_lite <- function(df_long,
 
   # Empirical Bayes to find random effects ----
   conditional_odds_fun <- function(t, u_i) {
-    phase_early <- get_early_phase(
-      t, est["t_half_early"], est["eta_early"], est["gamma_early"]
-    )
-    phase_late <- get_late_phase(
-      t, est["t_half_late"], est["eta_late"], est["gamma_late"]
-    )
+    phase_early <- get_early_phase(t, est["t_half_early"], est["eta_early"], est["gamma_early"])
+    phase_late <- get_late_phase(t, est["t_half_late"], est["eta_late"], est["gamma_late"])
     exp(est["beta0_1"] + est["a1"] * u_i) * phase_early +
       exp(est["beta0_2"] + est["a2"] * u_i) * phase_late
   }
@@ -186,7 +183,7 @@ fit_multimix_lite <- function(df_long,
     obj <- function(u) {
       pi <- conditional_odds_fun(t, u) /
         (1 + conditional_odds_fun(t, u))
-      -sum(y * log(pi) + (1 - y) * log(1 - pi)) +
+      - sum(y * log(pi) + (1 - y) * log(1 - pi)) +
         u^2 / (2 * est["sigma"]^2)
     }
     optim(0, obj, method = "BFGS")$par
@@ -249,24 +246,20 @@ fit_multimix_lite <- function(df_long,
 #' `print()`, `summary()`, and `plot()`.
 #'
 #' @export
-multimix_lite <- function(
-  df_long,
-  fixed_pars = list(beta0_2 = 0),
-  lower_bounds = lower_bounds_example_lite,
-  upper_bounds = upper_bounds_example_lite,
-  max_tries = 20,
-  return_first_sucess = FALSE,
-  verbose = FALSE,
-  seed = 1234
-) {
-
+multimix_lite <- function(df_long,
+                          fixed_pars = list(beta0_2 = 0),
+                          lower_bounds = lower_bounds_example_lite,
+                          upper_bounds = upper_bounds_example_lite,
+                          max_tries = 20,
+                          return_first_sucess = FALSE,
+                          verbose = FALSE,
+                          seed = 1234) {
   set.seed(seed)
 
   best_fit <- NULL
   best_log_lik <- -Inf
 
   for (attempt in seq_len(max_tries)) {
-
     if (verbose) {
       message("Attempt ", attempt, " / ", max_tries)
     }

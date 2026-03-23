@@ -1,0 +1,92 @@
+url: https://michelleUMD.github.io/multimix/
+
+template:
+  bootstrap: 5
+  bslib:
+    bootswatch: zephyr
+    base_font: {google: "Outfit"}
+    code_font: {google: "Fira Code"}
+  light-switch: true
+  theme: atom-one-light
+  theme-dark: atom-one-dark
+
+home:
+  sidebar:
+    structure: [badges, links, authors]
+    components:
+      badges:
+        title: Package badges
+        text: |
+          [![Version](https://img.shields.io/badge/version-1.0.0.9000-blue.svg)](https://github.com/michelleUMD/multimix)<br>
+          [![R-CMD-check](https://github.com/michelleUMD/multimix/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/michelleUMD/multimix/actions/workflows/R-CMD-check.yaml)<br>
+          [![lint](https://github.com/michelleUMD/multimix/actions/workflows/lint.yaml/badge.svg)](https://github.com/michelleUMD/multimix/actions/workflows/lint.yaml)<br>
+          [![Codecov test coverage](https://codecov.io/gh/michelleUMD/multimix/graph/badge.svg)](https://app.codecov.io/gh/michelleUMD/multimix)<br>
+          [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+navbar:
+  structure:
+    right: [search, github, lightswitch]
+
+reference:
+- title: "Model Fitting"
+  desc: >
+    Fit the biphasic temporal decomposition logistic mixed effects model.
+    Use `multimix()` for two independent random effects per subject, or
+    `multimix_lite()` for a single shared random effect.
+  contents:
+  - multimix
+  - multimix_lite
+
+- title: "S3 Methods"
+  desc: >
+    Print and plot methods for fitted model objects.
+  contents:
+  - print.multimix_model
+  - plot.multimix_model
+  - plot.multimix_model_lite
+
+- title: "Temporal Decomposition"
+  desc: >
+    Core functions for the early- and late-phase temporal components.
+  contents:
+  - decompos
+  - get_early_phase
+  - get_late_phase
+
+- title: "Initialization & Bounds"
+  desc: >
+    Default initial parameter values and search bounds for optimization,
+    plus a helper to sample random starting points.
+  contents:
+  - default_init_example
+  - default_init_example_lite
+  - lower_bounds_example
+  - upper_bounds_example
+  - lower_bounds_example_lite
+  - upper_bounds_example_lite
+  - generate_random_init_from_bounds
+
+- title: "Data & Utilities"
+  desc: >
+    Example dataset and input validation helper.
+  contents:
+  - sample_data
+  - check_df_long
+
+articles:
+- title: "Getting Started"
+  contents:
+  - multimix-introduction
+
+- title: "Model Details"
+  contents:
+  - temporal-decomposition
+  - model-comparison
+
+footer:
+  structure:
+    left: developed_by
+    right: built_with_pkgdown
+  components:
+    developed_by: "Michelle Fang"
+    built_with_pkgdown: "Built with [pkgdown](https://pkgdown.r-lib.org/)"

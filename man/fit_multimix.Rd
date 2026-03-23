@@ -6,32 +6,36 @@
 \usage{
 fit_multimix(
   df_long,
-  nGH = 40,
+  n_gh = 40,
   fixed_pars = list(),
   default_init = default_init_example,
   verbose = FALSE
 )
 }
 \arguments{
-\item{df_long}{data in long format. Columns are: Subject_ID, Time, Binary_outcome}
+\item{df_long}{data in long format.
+Columns are: Subject_ID, Time, Binary_outcome}
 
-\item{nGH}{number of nodes for optimizer}
+\item{n_gh}{number of nodes for optimizer}
 
-\item{fixed_pars}{named list of parameters to fix values (i.e. no optimization on)}
+\item{fixed_pars}{named list of parameters to fix values
+(i.e. no optimization on)}
 
 \item{default_init}{named list of initial parameters to try optimizing on}
 
 \item{verbose}{logical.}
 }
 \value{
-An object of class \code{multimix_model}, which is a list containing at least:
+An object of class \code{multimix_model}, which is a list containing
+at least:
 \describe{
 \item{df_long}{The original \code{df_long} data frame used for fitting.}
 \item{est}{Named numeric vector of estimated parameters.}
 \item{u_hat}{Estimated random effects of size \verb{[N, 2]}}
 \item{logLik}{Numeric. Log-likelihood of the fitted model.}
 }
-The object is intended to be used with S3 methods such as \code{print()}, \code{summary()}, and \code{plot()}.
+The object is intended to be used with S3 methods such as
+\code{print()}, \code{summary()}, and \code{plot()}.
 }
 \description{
 This is called by \code{multimix()} using different initiating parameters

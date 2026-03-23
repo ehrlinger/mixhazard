@@ -1,49 +1,59 @@
 # Model ----
-#' fit_multimix_lite: Fit a lighter version of the mixed effects model using initiating parameters
+#' fit_multimix_lite: Fit a lighter version of the mixed effects model
+#' using initiating parameters
 #'
-#' This is called by `fit_model_with_retries_lite` using different initiating parameters.
-#' Contrary to the full model, this model only fits a single random effect and
-#' uses a scaling coefficient to approximate the second random effect
+#' This is called by `multimix_lite()` using different initiating parameters.
+#' Contrary to the full model, this model only fits a single random effect
+#' and uses a scaling coefficient to approximate the second random effect
 #'
-#' @param df_long data in long format. Columns are: Subject_ID, Time, Binary_outcome
-#' @param nGH number of nodes for optimizer
-#' @param fixed_pars named list of parameters to fix values (i.e. no optimization on)
+#' @param df_long data in long format.
+#'   Columns are: Subject_ID, Time, Binary_outcome
+#' @param n_gh number of nodes for optimizer
+#' @param fixed_pars named list of parameters to fix values
+#'   (i.e. no optimization on)
 #' @param default_init named list of initial parameters to try optimizing on
-#' @return An object of class `multi_mix_model`, which is a list containing at least:
+#' @param verbose logical.
+#' @return An object of class `multimix_model_lite`, which is a list containing
+#'   at least:
 #' \describe{
 #'   \item{df_long}{The original `df_long` data frame used for fitting.}
 #'   \item{est}{Named numeric vector of estimated parameters.}
-#'   \item{u_hat}{Estimated random effects of size `[N, 2]`}
+#'   \item{u_hat}{Estimated random effects (named vector, one per subject).}
 #'   \item{logLik}{Numeric. Log-likelihood of the fitted model.}
 #' }
-#' The object is intended to be used with S3 methods such as `print()`, `summary()`, and `plot()`.
+#' The object is intended to be used with S3 methods such as
+#' `print()` and `plot()`.
 fit_multimix_lite <- function(df_long,
-                           nGH = 40,
-                           fixed_pars = list(),
-                           default_init = default_init_example) {
-
+                              n_gh = 40,
+                              fixed_pars = list(),
+                              default_init = default_init_example_lite,
+                              verbose = FALSE) {
   check_df_long(df_long)
 
-  # Gauss–Hermite quadrature ----
-  gh <- gauss.quad.prob(nGH, dist = "normal")
+  # Gauss-Hermite quadrature ----
+  gh <- gauss.quad.prob(n_gh, dist = "normal")
   nodes <- gh$nodes
   weights <- gh$weights
 
   # Distinguish parameters to optimize vs fixed
-  full_param_names = names(default_init_example_lite)
+  full_param_names <- names(default_init_example_lite)
   train_pars <- setdiff(full_param_names, names(fixed_pars))
   init_pars  <- default_init[train_pars]
 
-  # Compute negative log liklihood for optimization
-  negLogLik <- function(pars, data, nodes, weights, fixed_pars = list(), eps = 1e-300) {
-
+  # Compute negative log likelihood for optimization
+  neg_log_lik <- function(pars,
+                          data,
+                          nodes,
+                          weights,
+                          fixed_pars = list(),
+                          eps = 1e-300) {
     # Combine fixed and optimized parameters
     full_pars <- pars
     for (p in names(fixed_pars)) {
       full_pars[[p]] <- fixed_pars[[p]]
     }
 
-    last_pars <<- full_pars
+    assign("last_pars", full_pars, envir = parent_env)
 
     beta0_1 <- full_pars["beta0_1"]
     beta0_2 <- full_pars["beta0_2"]
@@ -51,7 +61,7 @@ fit_multimix_lite <- function(df_long,
     a2       <- full_pars["a2"]
 
     # Use exp so that these values are always positive
-    sigma_u  <- exp(full_pars["log_sigma"])
+    sigma_u      <- exp(full_pars["log_sigma"])
     t_half_early <- exp(full_pars["log_t_half_early"])
     t_half_late  <- exp(full_pars["log_t_half_late"])
 
@@ -60,21 +70,23 @@ fit_multimix_lite <- function(df_long,
     gamma_early  <- full_pars["gamma_early"]
     gamma_late   <- full_pars["gamma_late"]
 
-    if(eta_early < 0 & gamma_early < 0 | eta_late < 0 & gamma_late < 0) {
+    early_invalid <- eta_early < 0 && gamma_early < 0
+    late_invalid  <- eta_late < 0 && gamma_late < 0
+    if (early_invalid || late_invalid) {
       stop("Generic function undefined for eta and gamma both < 0")
     }
 
-    Lambda_1 <- function(t) get_early_phase(t, t_half_early, eta_early, gamma_early)
-    Lambda_2 <- function(t) get_late_phase(t, t_half_late, eta_late, gamma_late)
+    lambda_1 <- function(t) {
+      get_early_phase(t, t_half_early, eta_early, gamma_early)
+    }
+    lambda_2 <- function(t) {
+      get_late_phase(t, t_half_late, eta_late, gamma_late)
+    }
 
     conditional_odds <- function(t, u_i) {
-      Omega1 <- exp(beta0_1 + a1 * u_i)
-      Omega2 <- exp(beta0_2 + a2 * u_i)
-
-      Lambda1 <- Lambda_1(t)
-      Lambda2 <- Lambda_2(t)
-
-      Omega1 * Lambda_1(t) + Omega2 * Lambda_2(t)
+      omega1 <- exp(beta0_1 + a1 * u_i)
+      omega2 <- exp(beta0_2 + a2 * u_i)
+      omega1 * lambda_1(t) + omega2 * lambda_2(t)
     }
 
     subjects <- unique(data$Subject_ID)
@@ -86,7 +98,7 @@ fit_multimix_lite <- function(df_long,
       t_i <- subdat$Time
 
       # Compute log-likelihood for each quadrature node
-      logL_k <- sapply(nodes, function(k) {
+      log_l_k <- sapply(nodes, function(k) {
         u_k <- sigma_u * k
         odds <- conditional_odds(t_i, u_k)
 
@@ -95,26 +107,28 @@ fit_multimix_lite <- function(df_long,
         sum(y_i * log(pi_k) + (1 - y_i) * log(1 - pi_k))
       })
 
-      maxlog <- max(logL_k)
-      Li <- exp(maxlog) * sum(weights * exp(logL_k - maxlog))
-      total_loglik <- total_loglik + log(Li + eps)
+      maxlog <- max(log_l_k)
+      li <- exp(maxlog) * sum(weights * exp(log_l_k - maxlog))
+      total_loglik <- total_loglik + log(li + eps)
     }
 
-    return(-total_loglik)
+    - total_loglik
   }
 
 
   # Optimization ----
-  # BFGS optimizer often fails, so making a variable to capture the last set of params
-  # right before it fails
+  # BFGS optimizer often fails, so making a variable to capture
+  # the last set of params right before it fails
+  parent_env <- environment()
   last_pars <- NULL
 
-  if(verbose) {
+  if (verbose) {
     cat("Starting L-BFGS-B refinement\n")
   }
   opt2 <- tryCatch(
     optim(
-      init_pars, negLogLik,
+      init_pars,
+      neg_log_lik,
       data = df_long,
       nodes = nodes,
       weights = weights,
@@ -124,7 +138,7 @@ fit_multimix_lite <- function(df_long,
       control = list(maxit = 2000)
     ),
     error = function(e) {
-      if(verbose) {
+      if (verbose) {
         message("L-BFGS-B failed: ", conditionMessage(e))
         message("Last parameters evaluated:")
         message(paste(capture.output(print(last_pars)), collapse = "\n"))
@@ -133,7 +147,7 @@ fit_multimix_lite <- function(df_long,
     }
   )
 
-  if(verbose) {
+  if (verbose) {
     cat("After L-BFGS-B:\n")
     print(opt2$par)
     cat("LogLik =", -opt2$value, "\n\n")
@@ -151,16 +165,20 @@ fit_multimix_lite <- function(df_long,
 
   for (lp in log_params) {
     plain_name <- sub("^log_", "", lp)      # remove "log_" prefix
-    est[plain_name] <- exp(est[lp])        # exponentiate
-    est <- est[!names(est) %in% lp]        # remove the original log_ entry
+    est[plain_name] <- exp(est[lp])          # exponentiate
+    est <- est[!names(est) %in% lp]          # remove the original log_ entry
   }
 
   # Empirical Bayes to find random effects ----
   conditional_odds_fun <- function(t, u_i) {
-    exp(est["beta0_1"] + est["a1"] * u_i) *
-      get_early_phase(t, est["t_half_early"], est["eta_early"], est["gamma_early"]) +
-      exp(est["beta0_2"] + est["a2"] * u_i) *
-      get_late_phase(t, est["t_half_late"], est["eta_late"], est["gamma_late"])
+    phase_early <- get_early_phase(
+      t, est["t_half_early"], est["eta_early"], est["gamma_early"]
+    )
+    phase_late <- get_late_phase(
+      t, est["t_half_late"], est["eta_late"], est["gamma_late"]
+    )
+    exp(est["beta0_1"] + est["a1"] * u_i) * phase_early +
+      exp(est["beta0_2"] + est["a2"] * u_i) * phase_late
   }
 
   subjects <- unique(df_long$Subject_ID)
@@ -169,7 +187,7 @@ fit_multimix_lite <- function(df_long,
     obj <- function(u) {
       pi <- conditional_odds_fun(t, u) /
         (1 + conditional_odds_fun(t, u))
-      -sum(y * log(pi) + (1 - y) * log(1 - pi)) +
+      - sum(y * log(pi) + (1 - y) * log(1 - pi)) +
         u^2 / (2 * est["sigma"]^2)
     }
     optim(0, obj, method = "BFGS")$par
@@ -183,63 +201,80 @@ fit_multimix_lite <- function(df_long,
 
 
   # Return value ----
-  multimix_lite <- list(
+  result <- list(
     df_long = df_long,
     est = est,
     u_hat = u_hat,
     logLik = -opt2$value
   )
 
-  class(multimix_lite) <- "multimix_lite"
-  return(multimix_lite)
+  class(result) <- "multimix_model_lite"
+  result
 
 }
 
-#' multimix_lite: Find optimal lighter model using several initiating parameters
+#' multimix_lite: Find optimal lighter model using several initiating
+#' parameters
 #'
-#' Due to many undefined cases of the generic function and the lack of an empirical solution
-#' to the optimizer, this function will retry several initiating parameters
-#' and find the most optimal model.
-#' Contrary to the full model, this model only fits a single random effect and
-#' uses a scaling coefficient to approximate the second random effect.
+#' Due to many undefined cases of the generic function and the lack of an
+#' empirical solution to the optimizer, this function will retry several
+#' initiating parameters and find the most optimal model.
+#' Contrary to the full model, this model only fits a single random effect
+#' and uses a scaling coefficient to approximate the second random effect.
 #'
-#' @param df_long data in long format. Columns are: Subject_ID, Time, Binary_outcome
-#' @param fixed_pars named list of parameters to fix values (i.e. no optimization on)
-#' @param lower_bounds named list of lower bounds to guess initial params within
-#' @param upper_bounds named list of upper bounds to guess initial params within
+#' @param df_long data in long format.
+#'   Columns are: Subject_ID, Time, Binary_outcome
+#' @param fixed_pars named list of parameters to fix values
+#'   (i.e. no optimization on)
+#' @param lower_bounds named list of lower bounds to guess initial params
+#'   within
+#' @param upper_bounds named list of upper bounds to guess initial params
+#'   within
 #' @param max_tries number of initial params to be tried
-#' @param return_first_sucess logical. If `TRUE` then first model that works will be returned. Otherwise will exhaust the full number of retires to find the most optimal solution
-#' @param verbose logical. If `TRUE` then error messages will be displayed for each failed attempt
+#' @param return_first_success logical. If `TRUE` then first model that works
+#'   will be returned. Otherwise will exhaust the full number of retries to
+#'   find the most optimal solution.
+#' @param return_first_sucess Deprecated. Use `return_first_success` instead.
+#' @param verbose logical. If `TRUE` then error messages will be displayed
+#'   for each failed attempt
 #' @param seed random number generator seed
 #'
-#' @return An object of class `multi_mix_model`, which is a list containing at least:
+#' @return An object of class `multimix_model_lite`, which is a list containing
+#'   at least:
 #' \describe{
 #'   \item{df_long}{The original `df_long` data frame used for fitting.}
 #'   \item{est}{Named numeric vector of estimated parameters.}
-#'   \item{u_hat}{Estimated random effects of size `[N, 2]`}
+#'   \item{u_hat}{Named numeric vector of empirical Bayes random effects,
+#'     one value per subject (length N).}
 #'   \item{logLik}{Numeric. Log-likelihood of the fitted model.}
 #' }
-#' The object is intended to be used with S3 methods such as `print()`, `summary()`, and `plot()`.
+#' The object is intended to be used with S3 methods such as
+#' `print()`, `summary()`, and `plot()`.
 #'
 #' @export
-multimix_lite <- function(
-    df_long,
-    fixed_pars = list(beta0_2 = 0),
-    lower_bounds = lower_bounds_example_lite,
-    upper_bounds = upper_bounds_example_lite,
-    max_tries = 20,
-    return_first_sucess = FALSE,
-    verbose = TRUE,
-    seed = 1234
-) {
-
+multimix_lite <- function(df_long,
+                          fixed_pars = list(beta0_2 = 0),
+                          lower_bounds = lower_bounds_example_lite,
+                          upper_bounds = upper_bounds_example_lite,
+                          max_tries = 20,
+                          return_first_success = FALSE,
+                          return_first_sucess = NULL,
+                          verbose = FALSE,
+                          seed = 1234) {
+  if (!is.null(return_first_sucess)) {
+    warning(
+      "'return_first_sucess' is misspelled and deprecated; ",
+      "use 'return_first_success' instead.",
+      call. = FALSE
+    )
+    return_first_success <- return_first_sucess
+  }
   set.seed(seed)
 
   best_fit <- NULL
-  best_logLik <- -Inf
+  best_log_lik <- -Inf
 
   for (attempt in seq_len(max_tries)) {
-
     if (verbose) {
       message("Attempt ", attempt, " / ", max_tries)
     }
@@ -250,7 +285,8 @@ multimix_lite <- function(
       fit_multimix_lite(
         df_long,
         fixed_pars = fixed_pars,
-        default_init = init
+        default_init = init,
+        verbose = verbose
       ),
       error = function(e) {
         if (verbose) {
@@ -265,15 +301,15 @@ multimix_lite <- function(
         message("Success | logLik = ", round(fit$logLik, 3))
       }
 
-      if (is.finite(fit$logLik) && fit$logLik > best_logLik) {
-        best_logLik <- fit$logLik
+      if (is.finite(fit$logLik) && fit$logLik > best_log_lik) {
+        best_log_lik <- fit$logLik
         best_fit <- fit
 
         if (verbose) {
           message("Updating with new best fit")
         }
       }
-      if(return_first_sucess) {
+      if (return_first_success) {
         return(best_fit)
       }
     }
@@ -284,7 +320,7 @@ multimix_lite <- function(
   }
 
   if (verbose) {
-    message("Best logLik across tries: ", round(best_logLik, 3))
+    message("Best logLik across tries: ", round(best_log_lik, 3))
   }
 
   best_fit

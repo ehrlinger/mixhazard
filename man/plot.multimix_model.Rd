@@ -7,9 +7,11 @@
 \method{plot}{multimix_model}(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{multimix_model}, typically returned by \code{fit_model_with_retries()}.}
+\item{x}{An object of class \code{multimix_model}, typically returned
+by \code{multimix()}.}
 
-\item{...}{Additional arguments passed to underlying plotting functions (currently ignored).}
+\item{...}{Additional arguments passed to underlying plotting functions
+(currently ignored).}
 }
 \value{
 \code{ggplot} object

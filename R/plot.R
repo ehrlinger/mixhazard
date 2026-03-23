@@ -1,16 +1,17 @@
 plot_drug_probabilities <- function(
-    est_list,
-    tgrid = NULL,
-    n_time_quartiles = 10,
-    title = "Temporal Decomposition Logistic Mixed Effects model"
+  est_list,
+  tgrid = NULL,
+  n_time_quartiles = 10,
+  title = "Temporal Decomposition Logistic Mixed Effects model"
 ) {
-
   df_long <- est_list$df_long
   u_hat   <- est_list$u_hat
   est     <- est_list$est
 
-  if(is.null(tgrid)) {
-    tgrid <- seq(0, max(df_long$Time), length.out = max(df_long$Time) * 10)
+  if (is.null(tgrid)) {
+    tgrid <- seq(0,
+                 max(df_long$Time, na.rm = TRUE),
+                 length.out = max(df_long$Time, na.rm = TRUE) * 10)
   }
 
   # small time shift to avoid t = 0 issues in the model
@@ -35,34 +36,32 @@ plot_drug_probabilities <- function(
 
   # Conditional odds with two random effects
   conditional_odds <- function(t, u1, u2) {
-    Omega1 <- exp(beta0_1 + a1 * u1)
-    Omega2 <- exp(beta0_2 + a2 * u2)
+    omega1 <- exp(beta0_1 + a1 * u1)
+    omega2 <- exp(beta0_2 + a2 * u2)
 
-    Omega1 * get_early_phase(t, t_half_early, eta_early, gamma_early) +
-      Omega2 * get_late_phase(t, t_half_late, eta_late, gamma_late)
+    omega1 * get_early_phase(t, t_half_early, eta_early, gamma_early) +
+      omega2 * get_late_phase(t, t_half_late, eta_late, gamma_late)
   }
 
   subjects <- unique(df_long$Subject_ID)
 
   # Subject-level fitted probabilities
   sub_list <- lapply(subjects, function(i) {
-    u_i <- u_hat[i, ]
+    u_i <- u_hat[as.character(i), ]
 
     odds <- conditional_odds(t_model, u_i[1], u_i[2])
     pi_i <- odds / (1 + odds)
 
-    data.frame(
-      Subject_ID = i,
-      Time       = t_plot,
-      Fitted     = pi_i
-    )
+    data.frame(Subject_ID = i,
+               Time       = t_plot,
+               Fitted     = pi_i)
   })
 
   sub_df <- bind_rows(sub_list)
 
   # Average and 95% CI across subjects
-  avg_ci_df <- sub_df %>%
-    group_by(Time) %>%
+  avg_ci_df <- sub_df |>
+    group_by(Time) |>
     summarise(
       Average_Fitted = mean(Fitted),
       Lower_CI = pmax(0, quantile(Fitted, 0.025)),
@@ -71,7 +70,7 @@ plot_drug_probabilities <- function(
     )
 
   # Quartile points from raw data
-  quartile_points <- df_long %>%
+  quartile_points <- df_long |>
     mutate(
       Time = as.numeric(Time),
       time_quartile = cut(
@@ -83,8 +82,8 @@ plot_drug_probabilities <- function(
         ),
         include.lowest = TRUE
       )
-    ) %>%
-    group_by(time_quartile) %>%
+    ) |>
+    group_by(time_quartile) |>
     summarise(
       Time = mean(Time, na.rm = TRUE),
       Prop_TRUE = mean(Binary_outcome, na.rm = TRUE),
@@ -105,10 +104,7 @@ plot_drug_probabilities <- function(
       color = "blue",
       linewidth = 1
     ) +
-    geom_point(
-      data = quartile_points,
-      aes(x = Time, y = Prop_TRUE),
-    ) +
+    geom_point(data = quartile_points, aes(x = Time, y = Prop_TRUE)) +
     scale_y_continuous(name = "Probability", limits = c(0, 1)) +
     scale_x_continuous(name = "Time (months)", limits = c(0, 60)) +
     labs(title = title) +
@@ -116,23 +112,20 @@ plot_drug_probabilities <- function(
 }
 
 plot_drug_probabilities_lite <- function(
-    est_list,
-    tgrid = NULL,
-    n_time_quartiles = 10,
-    title = "Temporal Decomposition Logistic Mixed Effects model"
+  est_list,
+  tgrid = NULL,
+  n_time_quartiles = 10,
+  title = "Temporal Decomposition Logistic Mixed Effects model"
 ) {
-
   df_long <- est_list$df_long
   u_hat   <- est_list$u_hat
   est     <- est_list$est
 
   # Default time grid from data
   if (is.null(tgrid)) {
-    tgrid <- seq(
-      0,
-      max(df_long$Time, na.rm = TRUE),
-      length.out = max(df_long$Time, na.rm = TRUE) * 10
-    )
+    tgrid <- seq(0,
+                 max(df_long$Time, na.rm = TRUE),
+                 length.out = max(df_long$Time, na.rm = TRUE) * 10)
   }
 
   # small time shift to avoid t = 0 issues in the model
@@ -157,34 +150,32 @@ plot_drug_probabilities_lite <- function(
 
   # Conditional odds (single random effect)
   conditional_odds <- function(t, u_i) {
-    Omega1 <- exp(beta0_1 + a1 * u_i)
-    Omega2 <- exp(beta0_2 + a2 * u_i)
+    omega1 <- exp(beta0_1 + a1 * u_i)
+    omega2 <- exp(beta0_2 + a2 * u_i)
 
-    Omega1 * get_early_phase(t, t_half_early, eta_early, gamma_early) +
-      Omega2 * get_late_phase(t, t_half_late, eta_late, gamma_late)
+    omega1 * get_early_phase(t, t_half_early, eta_early, gamma_early) +
+      omega2 * get_late_phase(t, t_half_late, eta_late, gamma_late)
   }
 
   subjects <- unique(df_long$Subject_ID)
 
   # Subject-level fitted probabilities
   sub_list <- lapply(subjects, function(i) {
-    u_i <- as.numeric(u_hat[i])
+    u_i <- as.numeric(u_hat[as.character(i)])
 
     odds <- conditional_odds(t_model, u_i)
     pi_i <- odds / (1 + odds)
 
-    data.frame(
-      Subject_ID = i,
-      Time       = t_plot,
-      Fitted     = pi_i
-    )
+    data.frame(Subject_ID = i,
+               Time       = t_plot,
+               Fitted     = pi_i)
   })
 
   sub_df <- bind_rows(sub_list)
 
   # Average and 95% CI across subjects
-  avg_ci_df <- sub_df %>%
-    group_by(Time) %>%
+  avg_ci_df <- sub_df |>
+    group_by(Time) |>
     summarise(
       Average_Fitted = mean(Fitted),
       Lower_CI = pmax(0, quantile(Fitted, 0.025)),
@@ -193,7 +184,7 @@ plot_drug_probabilities_lite <- function(
     )
 
   # Quartile point from raw data
-  quartile_points <- df_long %>%
+  quartile_points <- df_long |>
     mutate(
       Time = as.numeric(Time),
       time_quartile = cut(
@@ -205,8 +196,8 @@ plot_drug_probabilities_lite <- function(
         ),
         include.lowest = TRUE
       )
-    ) %>%
-    group_by(time_quartile) %>%
+    ) |>
+    group_by(time_quartile) |>
     summarise(
       Time = mean(Time, na.rm = TRUE),
       Prop_TRUE = mean(Binary_outcome, na.rm = TRUE),

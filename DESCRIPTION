@@ -1,31 +1,34 @@
 Package: multimix
-Title: Multi-phase temporal decomposition Mixed effects model 
-Version: 0.0.0.9000
-Authors@R: 
+Title: Biphasic Temporal Decomposition Logistic Mixed Effects Model
+Version: 1.0.0.9000
+Date: 2026-03-23
+Authors@R:
     person("Michelle", "Fang", , "fangm@ccf.org", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-1548-010X"))
-Description: Multi-phase temporal decomposition Mixed effects model 
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Description: Fits and visualizes biphasic temporal decomposition logistic mixed
+    effects models for longitudinal binary outcomes. The model decomposes
+    temporal patterns into early and late phases with subject-specific random
+    effects, using Gauss-Hermite quadrature for numerical integration and
+    L-BFGS-B optimization. Includes both a full model with two random effects
+    and a lite variant with a single shared random effect.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
-Depends: 
-    R (>= 2.10)
+Depends:
+    R (>= 4.1.0)
 LazyData: true
 Imports:
     dplyr,
     tidyr,
     ggplot2,
-    forcats,
-    lubridate,
-    purrr,
-    brms,
-    zoo,
-    statmod,
-    gt,
-    gtsummary
-Suggests: 
+    statmod
+Suggests:
+    testthat (>= 3.0.0),
     knitr,
-    rmarkdown
+    rmarkdown,
+    covr
+Config/testthat/edition: 3
 VignetteBuilder: knitr
+URL: https://github.com/michelleUMD/multimix
+BugReports: https://github.com/michelleUMD/multimix/issues

@@ -2,7 +2,8 @@
 % Please edit documentation in R/multimix_lite.R
 \name{multimix_lite}
 \alias{multimix_lite}
-\title{multimix_lite: Find optimal lighter model using several initiating parameters}
+\title{multimix_lite: Find optimal lighter model using several initiating
+parameters}
 \usage{
 multimix_lite(
   df_long,
@@ -10,42 +11,55 @@ multimix_lite(
   lower_bounds = lower_bounds_example_lite,
   upper_bounds = upper_bounds_example_lite,
   max_tries = 20,
-  return_first_sucess = FALSE,
-  verbose = TRUE,
+  return_first_success = FALSE,
+  return_first_sucess = NULL,
+  verbose = FALSE,
   seed = 1234
 )
 }
 \arguments{
-\item{df_long}{data in long format. Columns are: Subject_ID, Time, Binary_outcome}
+\item{df_long}{data in long format.
+Columns are: Subject_ID, Time, Binary_outcome}
 
-\item{fixed_pars}{named list of parameters to fix values (i.e. no optimization on)}
+\item{fixed_pars}{named list of parameters to fix values
+(i.e. no optimization on)}
 
-\item{lower_bounds}{named list of lower bounds to guess initial params within}
+\item{lower_bounds}{named list of lower bounds to guess initial params
+within}
 
-\item{upper_bounds}{named list of upper bounds to guess initial params within}
+\item{upper_bounds}{named list of upper bounds to guess initial params
+within}
 
 \item{max_tries}{number of initial params to be tried}
 
-\item{return_first_sucess}{logical. If \code{TRUE} then first model that works will be returned. Otherwise will exhaust the full number of retires to find the most optimal solution}
+\item{return_first_success}{logical. If \code{TRUE} then first model that works
+will be returned. Otherwise will exhaust the full number of retries to
+find the most optimal solution.}
 
-\item{verbose}{logical. If \code{TRUE} then error messages will be displayed for each failed attempt}
+\item{return_first_sucess}{Deprecated. Use \code{return_first_success} instead.}
+
+\item{verbose}{logical. If \code{TRUE} then error messages will be displayed
+for each failed attempt}
 
 \item{seed}{random number generator seed}
 }
 \value{
-An object of class \code{multi_mix_model}, which is a list containing at least:
+An object of class \code{multimix_model_lite}, which is a list containing
+at least:
 \describe{
 \item{df_long}{The original \code{df_long} data frame used for fitting.}
 \item{est}{Named numeric vector of estimated parameters.}
-\item{u_hat}{Estimated random effects of size \verb{[N, 2]}}
+\item{u_hat}{Named numeric vector of empirical Bayes random effects,
+one value per subject (length N).}
 \item{logLik}{Numeric. Log-likelihood of the fitted model.}
 }
-The object is intended to be used with S3 methods such as \code{print()}, \code{summary()}, and \code{plot()}.
+The object is intended to be used with S3 methods such as
+\code{print()}, \code{summary()}, and \code{plot()}.
 }
 \description{
-Due to many undefined cases of the generic function and the lack of an empirical solution
-to the optimizer, this function will retry several initiating parameters
-and find the most optimal model.
-Contrary to the full model, this model only fits a single random effect and
-uses a scaling coefficient to approximate the second random effect.
+Due to many undefined cases of the generic function and the lack of an
+empirical solution to the optimizer, this function will retry several
+initiating parameters and find the most optimal model.
+Contrary to the full model, this model only fits a single random effect
+and uses a scaling coefficient to approximate the second random effect.
 }

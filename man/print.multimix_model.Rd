@@ -10,7 +10,8 @@
 \item{x}{An object of class \code{multimix_model} or \code{multimix_model_lite},
 typically returned by \code{multimix()} or its lite variant.}
 
-\item{...}{Additional arguments (currently ignored) to allow method dispatch compatibility.}
+\item{...}{Additional arguments (currently ignored) to allow method
+dispatch compatibility.}
 }
 \value{
 Invisibly returns the original object \code{x}.

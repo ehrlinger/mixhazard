@@ -2,12 +2,12 @@
 # multimix
 
 <!-- badges: start -->
-[![Version](https://img.shields.io/badge/version-1.0.0.9000-blue.svg)](https://github.com/michelleUMD/multimix)
-[![R-CMD-check](https://github.com/michelleUMD/multimix/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/michelleUMD/multimix/actions/workflows/R-CMD-check.yaml)
-[![test-coverage](https://github.com/michelleUMD/multimix/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/michelleUMD/multimix/actions/workflows/test-coverage.yaml)
-[![Codecov test coverage](https://codecov.io/gh/michelleUMD/multimix/graph/badge.svg)](https://app.codecov.io/gh/michelleUMD/multimix)
-[![lint](https://github.com/michelleUMD/multimix/actions/workflows/lint.yaml/badge.svg)](https://github.com/michelleUMD/multimix/actions/workflows/lint.yaml)
-[![pkgdown](https://github.com/michelleUMD/multimix/actions/workflows/pkgdown.yaml/badge.svg)](https://michelleUMD.github.io/multimix/)
+[![Version](https://img.shields.io/badge/version-1.0.0.9000-blue.svg)](https://github.com/ehrlinger/mixhazard)
+[![R-CMD-check](https://github.com/ehrlinger/mixhazard/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ehrlinger/mixhazard/actions/workflows/R-CMD-check.yaml)
+[![test-coverage](https://github.com/ehrlinger/mixhazard/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/ehrlinger/mixhazard/actions/workflows/test-coverage.yaml)
+[![Codecov test coverage](https://codecov.io/gh/ehrlinger/mixhazard/graph/badge.svg)](https://app.codecov.io/gh/ehrlinger/mixhazard)
+[![lint](https://github.com/ehrlinger/mixhazard/actions/workflows/lint.yaml/badge.svg)](https://github.com/ehrlinger/mixhazard/actions/workflows/lint.yaml)
+[![pkgdown](https://github.com/ehrlinger/mixhazard/actions/workflows/pkgdown.yaml/badge.svg)](https://michelleUMD.github.io/multimix/)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <!-- badges: end -->
@@ -37,7 +37,7 @@ Install the development version from GitHub:
 
 ```r
 install.packages("devtools")
-devtools::install_github("michelleUMD/multimix")
+devtools::install_github("ehrlinger/mixhazard")
 ```
 
 ## Quick Start
@@ -98,7 +98,7 @@ Input data must be a data frame in **long format** with three required columns:
 
 ## Contributing
 
-Issues and pull requests are welcome at the [GitHub repository](https://github.com/michelleUMD/multimix/issues).
+Issues and pull requests are welcome at the [GitHub repository](https://github.com/ehrlinger/mixhazard/issues).
 
 ## Citation
 
@@ -107,5 +107,5 @@ If you use this package in your research, please cite:
 ```
 Fang, M. (2026). multimix: Biphasic Temporal Decomposition Logistic Mixed
   Effects Model. R package version 1.0.0.9000.
-  https://github.com/michelleUMD/multimix
+  https://github.com/ehrlinger/mixhazard
 ```

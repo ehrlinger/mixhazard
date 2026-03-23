@@ -9,9 +9,9 @@ plot_drug_probabilities <- function(
   est     <- est_list$est
 
   if (is.null(tgrid)) {
-    tgrid <- seq(0,
-                 max(df_long$Time, na.rm = TRUE),
-                 length.out = max(df_long$Time, na.rm = TRUE) * 10)
+    t_max    <- max(df_long$Time, na.rm = TRUE)
+    n_points <- max(1L, ceiling(t_max * 10))
+    tgrid <- seq(0, t_max, length.out = n_points)
   }
 
   # small time shift to avoid t = 0 issues in the model
@@ -123,9 +123,9 @@ plot_drug_probabilities_lite <- function(
 
   # Default time grid from data
   if (is.null(tgrid)) {
-    tgrid <- seq(0,
-                 max(df_long$Time, na.rm = TRUE),
-                 length.out = max(df_long$Time, na.rm = TRUE) * 10)
+    t_max    <- max(df_long$Time, na.rm = TRUE)
+    n_points <- max(1L, ceiling(t_max * 10))
+    tgrid <- seq(0, t_max, length.out = n_points)
   }
 
   # small time shift to avoid t = 0 issues in the model

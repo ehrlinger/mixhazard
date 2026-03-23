@@ -1,5 +1,5 @@
 
-# multimix <img src="man/figures/logo.png" align="right" height="139" alt="" />
+# multimix
 
 <!-- badges: start -->
 [![Version](https://img.shields.io/badge/version-1.0.0.9000-blue.svg)](https://github.com/michelleUMD/multimix)

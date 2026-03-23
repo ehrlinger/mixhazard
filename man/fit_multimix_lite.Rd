@@ -9,7 +9,7 @@ fit_multimix_lite(
   df_long,
   n_gh = 40,
   fixed_pars = list(),
-  default_init = default_init_example,
+  default_init = default_init_example_lite,
   verbose = FALSE
 )
 }
@@ -27,7 +27,7 @@ Columns are: Subject_ID, Time, Binary_outcome}
 \item{verbose}{logical.}
 }
 \value{
-An object of class \code{multimix_lite}, which is a list containing
+An object of class \code{multimix_model_lite}, which is a list containing
 at least:
 \describe{
 \item{df_long}{The original \code{df_long} data frame used for fitting.}

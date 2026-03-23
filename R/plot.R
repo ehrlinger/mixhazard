@@ -47,7 +47,7 @@ plot_drug_probabilities <- function(
 
   # Subject-level fitted probabilities
   sub_list <- lapply(subjects, function(i) {
-    u_i <- u_hat[i, ]
+    u_i <- u_hat[as.character(i), ]
 
     odds <- conditional_odds(t_model, u_i[1], u_i[2])
     pi_i <- odds / (1 + odds)
@@ -104,7 +104,7 @@ plot_drug_probabilities <- function(
       color = "blue",
       linewidth = 1
     ) +
-    geom_point(data = quartile_points, aes(x = Time, y = Prop_TRUE), ) +
+    geom_point(data = quartile_points, aes(x = Time, y = Prop_TRUE)) +
     scale_y_continuous(name = "Probability", limits = c(0, 1)) +
     scale_x_continuous(name = "Time (months)", limits = c(0, 60)) +
     labs(title = title) +
@@ -161,7 +161,7 @@ plot_drug_probabilities_lite <- function(
 
   # Subject-level fitted probabilities
   sub_list <- lapply(subjects, function(i) {
-    u_i <- as.numeric(u_hat[i])
+    u_i <- as.numeric(u_hat[as.character(i)])
 
     odds <- conditional_odds(t_model, u_i)
     pi_i <- odds / (1 + odds)

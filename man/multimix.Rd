@@ -10,7 +10,8 @@ multimix(
   lower_bounds = lower_bounds_example,
   upper_bounds = upper_bounds_example,
   max_tries = 20,
-  return_first_sucess = FALSE,
+  return_first_success = FALSE,
+  return_first_sucess = NULL,
   verbose = FALSE,
   seed = 1234
 )
@@ -30,9 +31,11 @@ within}
 
 \item{max_tries}{number of initial params to be tried}
 
-\item{return_first_sucess}{logical. If \code{TRUE} then first model that works
-will be returned. Otherwise will exhaust the full number of retires to
-find the most optimal solution}
+\item{return_first_success}{logical. If \code{TRUE} then first model that works
+will be returned. Otherwise will exhaust the full number of retries to
+find the most optimal solution.}
+
+\item{return_first_sucess}{Deprecated. Use \code{return_first_success} instead.}
 
 \item{verbose}{logical. If \code{TRUE} then error messages will be displayed
 for each failed attempt}

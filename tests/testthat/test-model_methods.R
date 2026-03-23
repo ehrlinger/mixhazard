@@ -6,7 +6,7 @@ test_that("var_to_english_dict maps all expected parameters", {
     "gamma_early", "gamma_late",
     "sigma", "sigma1", "sigma2"
   )
-  expect_true(all(expected_keys %in% names(var_to_english_dict)))
+  expect_true(all(expected_keys %in% names(multimix:::var_to_english_dict)))
 })
 
 test_that("print.multimix_model prints and returns invisibly", {

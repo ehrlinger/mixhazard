@@ -84,13 +84,13 @@ plot.multimix_model <- function(x, ...) {
   plot_drug_probabilities(x, ...)
 }
 
-#' Plot simplified drug probability trajectories for a multi-mix model
+#' Plot simplified drug probability trajectories for a multi-mix lite model
 #'
 #' This S3 method plots the estimated probabilities of drug administration
-#' over time for each drug class, using a lighter version of the multimix model
+#' over time for each drug class, using the lite multimix model object.
 #'
-#' @param x An object of class `multimix_model`, typically returned
-#'   by `multimix()`.
+#' @param x An object of class `multimix_model_lite`, typically returned
+#'   by `multimix_lite()`.
 #' @param ... Additional arguments passed to underlying plotting functions
 #'   (currently ignored).
 #'

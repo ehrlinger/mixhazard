@@ -2,13 +2,13 @@
 % Please edit documentation in R/model_methods.R
 \name{plot.multimix_model_lite}
 \alias{plot.multimix_model_lite}
-\title{Plot simplified drug probability trajectories for a multi-mix model}
+\title{Plot simplified drug probability trajectories for a multi-mix lite model}
 \usage{
 \method{plot}{multimix_model_lite}(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{multimix_model}, typically returned
-by \code{multimix()}.}
+\item{x}{An object of class \code{multimix_model_lite}, typically returned
+by \code{multimix_lite()}.}
 
 \item{...}{Additional arguments passed to underlying plotting functions
 (currently ignored).}
@@ -18,5 +18,5 @@ by \code{multimix()}.}
 }
 \description{
 This S3 method plots the estimated probabilities of drug administration
-over time for each drug class, using a lighter version of the multimix model
+over time for each drug class, using the lite multimix model object.
 }

@@ -13,7 +13,7 @@
 #'   (i.e. no optimization on)
 #' @param default_init named list of initial parameters to try optimizing on
 #' @param verbose logical.
-#' @return An object of class `multimix_lite`, which is a list containing
+#' @return An object of class `multimix_model_lite`, which is a list containing
 #'   at least:
 #' \describe{
 #'   \item{df_long}{The original `df_long` data frame used for fitting.}
@@ -26,7 +26,7 @@
 fit_multimix_lite <- function(df_long,
                               n_gh = 40,
                               fixed_pars = list(),
-                              default_init = default_init_example,
+                              default_init = default_init_example_lite,
                               verbose = FALSE) {
   check_df_long(df_long)
 
@@ -208,7 +208,7 @@ fit_multimix_lite <- function(df_long,
     logLik = -opt2$value
   )
 
-  class(result) <- "multimix_lite"
+  class(result) <- "multimix_model_lite"
   result
 
 }
@@ -231,19 +231,21 @@ fit_multimix_lite <- function(df_long,
 #' @param upper_bounds named list of upper bounds to guess initial params
 #'   within
 #' @param max_tries number of initial params to be tried
-#' @param return_first_sucess logical. If `TRUE` then first model that works
-#'   will be returned. Otherwise will exhaust the full number of retires to
-#'   find the most optimal solution
+#' @param return_first_success logical. If `TRUE` then first model that works
+#'   will be returned. Otherwise will exhaust the full number of retries to
+#'   find the most optimal solution.
+#' @param return_first_sucess Deprecated. Use `return_first_success` instead.
 #' @param verbose logical. If `TRUE` then error messages will be displayed
 #'   for each failed attempt
 #' @param seed random number generator seed
 #'
-#' @return An object of class `multimix_lite`, which is a list containing
+#' @return An object of class `multimix_model_lite`, which is a list containing
 #'   at least:
 #' \describe{
 #'   \item{df_long}{The original `df_long` data frame used for fitting.}
 #'   \item{est}{Named numeric vector of estimated parameters.}
-#'   \item{u_hat}{Estimated random effects of size `[N, 2]`}
+#'   \item{u_hat}{Named numeric vector of empirical Bayes random effect estimates,
+#'     one value per subject (length N).}
 #'   \item{logLik}{Numeric. Log-likelihood of the fitted model.}
 #' }
 #' The object is intended to be used with S3 methods such as
@@ -255,9 +257,18 @@ multimix_lite <- function(df_long,
                           lower_bounds = lower_bounds_example_lite,
                           upper_bounds = upper_bounds_example_lite,
                           max_tries = 20,
-                          return_first_sucess = FALSE,
+                          return_first_success = FALSE,
+                          return_first_sucess = NULL,
                           verbose = FALSE,
                           seed = 1234) {
+  if (!is.null(return_first_sucess)) {
+    warning(
+      "'return_first_sucess' is misspelled and deprecated; ",
+      "use 'return_first_success' instead.",
+      call. = FALSE
+    )
+    return_first_success <- return_first_sucess
+  }
   set.seed(seed)
 
   best_fit <- NULL
@@ -298,7 +309,7 @@ multimix_lite <- function(df_long,
           message("Updating with new best fit")
         }
       }
-      if (return_first_sucess) {
+      if (return_first_success) {
         return(best_fit)
       }
     }

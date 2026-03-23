@@ -12,7 +12,7 @@ test_that(
     init["gamma_late"] <- 0
 
     result <- tryCatch(
-      fit_multimix_lite(
+      multimix:::fit_multimix_lite(
         sample_data, n_gh = 10, default_init = init, verbose = FALSE
       ),
       error = function(e) NULL
@@ -20,7 +20,7 @@ test_that(
 
     skip_if(is.null(result), "Optimizer did not converge with sample_data")
 
-    expect_s3_class(result, "multimix_lite")
+    expect_s3_class(result, "multimix_model_lite")
     expect_true("df_long" %in% names(result))
     expect_true("est" %in% names(result))
     expect_true("u_hat" %in% names(result))
@@ -61,7 +61,7 @@ test_that("fixed_pars are respected in fit_multimix", {
   init["gamma_late"] <- 0
 
   result <- tryCatch(
-    fit_multimix(
+    multimix:::fit_multimix(
       sample_data, n_gh = 10, default_init = init,
       fixed_pars = list(beta0_2 = 0), verbose = FALSE
     ),
@@ -82,7 +82,7 @@ test_that("fit_multimix returns correct class and structure", {
   init["gamma_late"] <- 0
 
   result <- tryCatch(
-    fit_multimix(
+    multimix:::fit_multimix(
       sample_data, n_gh = 10, default_init = init, verbose = FALSE
     ),
     error = function(e) NULL

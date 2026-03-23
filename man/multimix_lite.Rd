@@ -11,7 +11,8 @@ multimix_lite(
   lower_bounds = lower_bounds_example_lite,
   upper_bounds = upper_bounds_example_lite,
   max_tries = 20,
-  return_first_sucess = FALSE,
+  return_first_success = FALSE,
+  return_first_sucess = NULL,
   verbose = FALSE,
   seed = 1234
 )
@@ -31,9 +32,11 @@ within}
 
 \item{max_tries}{number of initial params to be tried}
 
-\item{return_first_sucess}{logical. If \code{TRUE} then first model that works
-will be returned. Otherwise will exhaust the full number of retires to
-find the most optimal solution}
+\item{return_first_success}{logical. If \code{TRUE} then first model that works
+will be returned. Otherwise will exhaust the full number of retries to
+find the most optimal solution.}
+
+\item{return_first_sucess}{Deprecated. Use \code{return_first_success} instead.}
 
 \item{verbose}{logical. If \code{TRUE} then error messages will be displayed
 for each failed attempt}
@@ -41,12 +44,13 @@ for each failed attempt}
 \item{seed}{random number generator seed}
 }
 \value{
-An object of class \code{multimix_lite}, which is a list containing
+An object of class \code{multimix_model_lite}, which is a list containing
 at least:
 \describe{
 \item{df_long}{The original \code{df_long} data frame used for fitting.}
 \item{est}{Named numeric vector of estimated parameters.}
-\item{u_hat}{Estimated random effects of size \verb{[N, 2]}}
+\item{u_hat}{Named numeric vector of empirical Bayes random effect estimates,
+one value per subject (length N).}
 \item{logLik}{Numeric. Log-likelihood of the fitted model.}
 }
 The object is intended to be used with S3 methods such as

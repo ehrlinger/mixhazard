@@ -265,9 +265,10 @@ fit_multimix <- function(df_long,
 #' @param upper_bounds named list of upper bounds to guess initial params
 #'   within
 #' @param max_tries number of initial params to be tried
-#' @param return_first_sucess logical. If `TRUE` then first model that works
-#'   will be returned. Otherwise will exhaust the full number of retires to
-#'   find the most optimal solution
+#' @param return_first_success logical. If `TRUE` then first model that works
+#'   will be returned. Otherwise will exhaust the full number of retries to
+#'   find the most optimal solution.
+#' @param return_first_sucess Deprecated. Use `return_first_success` instead.
 #' @param verbose logical. If `TRUE` then error messages will be displayed
 #'   for each failed attempt
 #' @param seed random number generator seed
@@ -289,9 +290,18 @@ multimix <- function(df_long,
                      lower_bounds = lower_bounds_example,
                      upper_bounds = upper_bounds_example,
                      max_tries = 20,
-                     return_first_sucess = FALSE,
+                     return_first_success = FALSE,
+                     return_first_sucess = NULL,
                      verbose = FALSE,
                      seed = 1234) {
+  if (!is.null(return_first_sucess)) {
+    warning(
+      "'return_first_sucess' is misspelled and deprecated; ",
+      "use 'return_first_success' instead.",
+      call. = FALSE
+    )
+    return_first_success <- return_first_sucess
+  }
   set.seed(seed)
 
   best_fit <- NULL
@@ -332,7 +342,7 @@ multimix <- function(df_long,
           message("Updating with new best fit")
         }
       }
-      if (return_first_sucess) {
+      if (return_first_success) {
         return(best_fit)
       }
     }

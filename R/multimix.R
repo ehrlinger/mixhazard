@@ -59,6 +59,7 @@ check_df_long <- function(df_long) {
 #' }
 #' The object is intended to be used with S3 methods such as
 #' `print()`, `summary()`, and `plot()`.
+#' @keywords internal
 fit_multimix <- function(df_long,
                          n_gh = 40,
                          fixed_pars = list(),

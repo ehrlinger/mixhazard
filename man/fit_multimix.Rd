@@ -40,3 +40,4 @@ The object is intended to be used with S3 methods such as
 \description{
 This is called by \code{multimix()} using different initiating parameters
 }
+\keyword{internal}

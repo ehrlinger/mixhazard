@@ -23,6 +23,7 @@
 #' }
 #' The object is intended to be used with S3 methods such as
 #' `print()` and `plot()`.
+#' @keywords internal
 fit_multimix_lite <- function(df_long,
                               n_gh = 40,
                               fixed_pars = list(),

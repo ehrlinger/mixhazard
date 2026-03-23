@@ -43,3 +43,4 @@ This is called by \code{multimix_lite()} using different initiating parameters.
 Contrary to the full model, this model only fits a single random effect
 and uses a scaling coefficient to approximate the second random effect
 }
+\keyword{internal}

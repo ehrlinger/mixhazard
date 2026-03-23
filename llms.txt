@@ -30,7 +30,7 @@ Install the development version from GitHub:
 
 ``` r
 install.packages("devtools")
-devtools::install_github("ehrlinger/mixhazard")
+devtools::install_github("michelleUMD/multimix")
 ```
 
 ## Quick Start

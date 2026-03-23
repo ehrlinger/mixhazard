@@ -7,7 +7,7 @@
 [![test-coverage](https://github.com/ehrlinger/mixhazard/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/ehrlinger/mixhazard/actions/workflows/test-coverage.yaml)
 [![Codecov test coverage](https://codecov.io/gh/ehrlinger/mixhazard/graph/badge.svg)](https://app.codecov.io/gh/ehrlinger/mixhazard)
 [![lint](https://github.com/ehrlinger/mixhazard/actions/workflows/lint.yaml/badge.svg)](https://github.com/ehrlinger/mixhazard/actions/workflows/lint.yaml)
-[![pkgdown](https://github.com/ehrlinger/mixhazard/actions/workflows/pkgdown.yaml/badge.svg)](https://michelleUMD.github.io/multimix/)
+[![pkgdown](https://github.com/ehrlinger/mixhazard/actions/workflows/pkgdown.yaml/badge.svg)](https://ehrlinger.github.io/mixhazard)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <!-- badges: end -->

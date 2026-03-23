@@ -7,6 +7,7 @@
 [![test-coverage](https://github.com/michelleUMD/multimix/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/michelleUMD/multimix/actions/workflows/test-coverage.yaml)
 [![Codecov test coverage](https://codecov.io/gh/michelleUMD/multimix/graph/badge.svg)](https://app.codecov.io/gh/michelleUMD/multimix)
 [![lint](https://github.com/michelleUMD/multimix/actions/workflows/lint.yaml/badge.svg)](https://github.com/michelleUMD/multimix/actions/workflows/lint.yaml)
+[![pkgdown](https://github.com/michelleUMD/multimix/actions/workflows/pkgdown.yaml/badge.svg)](https://michelleUMD.github.io/multimix/)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <!-- badges: end -->

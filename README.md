@@ -12,9 +12,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <!-- badges: end -->
 
-**Author:** Michelle Fang
-**Date:** 2026-01-15
-
 `multimix` is an R package for fitting and visualizing the **Biphasic Temporal Decomposition Logistic Mixed Effects Model** — a framework for analyzing longitudinal binary outcomes that exhibit two temporal phases (early and late) with subject-specific random effects.
 
 ## Model Overview

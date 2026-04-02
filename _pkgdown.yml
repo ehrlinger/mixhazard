@@ -30,14 +30,14 @@ navbar:
     articles:
       text: Articles
       menu:
-      - text: "Getting Started"
-        href: articles/multimix-introduction.html
-      - text: "---"
-      - text: "Model Details"
-      - text: "Understanding Temporal Decomposition"
-        href: articles/temporal-decomposition.html
-      - text: "Full vs Lite Model Comparison"
-        href: articles/model-comparison.html
+        - text: "Getting Started"
+          href: articles/multimix-introduction.html
+        - text: "---"
+        - text: "Model Details"
+        - text: "Understanding Temporal Decomposition"
+          href: articles/temporal-decomposition.html
+        - text: "Full vs Lite Model Comparison"
+          href: articles/model-comparison.html
 
 reference:
 - title: "Model Fitting"
